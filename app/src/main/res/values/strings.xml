@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">1484506_countbook_2.0</string>
+    <string name="add_new_record">Add Record</string>
+    <string name="delete_record">Delete Record</string>
+    <string name="decrease">-</string>
+    <string name="increase">+</string>
+    <string name="comments">Comments</string>
+    <string name="current_value">Current Value</string>
+    <string name="date">Date</string>
+    <string name="initial_value">Initial Value</string>
+    <string name="name">Name</string>
+    <string name="record_name">Name</string>
+    <string name="deleteRecord">Delete Record</string>
+    <string name="save_record">Save Record</string>
+</resources>
