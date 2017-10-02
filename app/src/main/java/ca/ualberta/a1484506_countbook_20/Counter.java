@@ -14,10 +14,10 @@ public class Counter implements Serializable {
     private String Name;
     private long DateTime;
     private String Comments;
-    private String Value;
+    private int Value;
 
 
-    public Counter(long dateTime, String name,  String comments, String value) {
+    public Counter(long dateTime, String name,  String comments, int value) {
         Name = name;
         DateTime = dateTime;
         Comments = comments;
@@ -37,10 +37,6 @@ public class Counter implements Serializable {
         Comments = comments;
     }
 
-    public void setValue(String value){
-        Value = value;
-    }
-
     public long getDateTime() {
         return DateTime;
     }
@@ -52,13 +48,9 @@ public class Counter implements Serializable {
     public String getComments() {
         return Comments;
     }
-
-    public String getValue(){
-        return Value;
-    }
-
+    // make date to string in necessary format
     public String getDateToString(Context context){
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd"
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy"
                 , context.getResources().getConfiguration().locale);
         sdf.setTimeZone(TimeZone.getDefault());
         return sdf.format(new Date(DateTime));

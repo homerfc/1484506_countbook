@@ -13,11 +13,10 @@ import java.util.ArrayList;
 /**
  * Created by Stanislav Lebedev on 2017-09-30.
  */
-
+    //save records into a separate file at local storage and load records from files
 public class Utilities {
 
     public static final String FILE_EXTENSION = ".bin";
-    public static final String FILE_EXTENSION2 = "FILE_EXTENSION";
 
     public static boolean saveRecord(Context context, Counter counter){
         String fileName = String.valueOf(counter.getDateTime()) + FILE_EXTENSION;
@@ -96,14 +95,9 @@ public class Utilities {
         }
         return null;
     }
-
-    public static boolean delFile(Context context, String fileName) {
+    // delete a file with a record
+    public static void delRecord(Context context, String fileName) {
         File dir = context.getFilesDir();
         File file = new File(dir, fileName);
-
-        if(file.exists() && !file.isDirectory()){
-            return file.delete();
-        }
-        return false;
     }
 }

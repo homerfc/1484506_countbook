@@ -18,13 +18,11 @@ public class CounterActivity extends AppCompatActivity{
     private int counterValue = 0;
     private TextView dpCurrentVal;
     private TextView dpDate;
-    private TextView dpIniValue;
 
     private EditText recordName;
     private EditText recordComments;
     private String recordFileName;
-    private Counter loadedCounter = null;
-    private boolean ViewOrUpdate;
+    private Counter loadedCounter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -34,9 +32,7 @@ public class CounterActivity extends AppCompatActivity{
         recordName = (EditText) findViewById(R.id.recordName);
         recordComments = (EditText) findViewById(R.id.recordComments);
 
-
         dpCurrentVal = (TextView)findViewById(R.id.dpCurrentVal);
-        dpIniValue = (TextView)findViewById(R.id.initialValue);
         dpDate = (TextView)findViewById(R.id.recordDate);
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");
@@ -44,31 +40,27 @@ public class CounterActivity extends AppCompatActivity{
 
         dpDate.setText(dateText);
 
-        recordFileName = getIntent().getStringExtra(Utilities.FILE_EXTENSION2);
-        if (recordFileName != null && !recordFileName.isEmpty() && recordFileName.endsWith(Utilities.FILE_EXTENSION)){
-            loadedCounter = Utilities.getRecordByName(getApplicationContext(), recordFileName);
+        recordFileName = getIntent().getStringExtra("Record_File");
+        if (recordFileName != null && !recordFileName.isEmpty()){
+            loadedCounter = Utilities.getRecordByName(this, recordFileName);
 
             if (loadedCounter != null){
                 recordName.setText(loadedCounter.getName());
                 recordComments.setText((loadedCounter.getComments()));
-                dpIniValue.setText(loadedCounter.getValue());
-                ViewOrUpdate = true;
 
             }
 
-        } else {
-            ViewOrUpdate = false;
         }
 
     }
 
-
+    // increase current value by one
     public void plusButtonClicked(View view) {
         counterValue++;
         dpCurrentVal.setText(String.valueOf(counterValue));
 
     }
-
+    //decrease current value by one
     public void minusButtonClicked(View view) {
         if (counterValue == 0){
             Toast.makeText(CounterActivity.this,"Value can't be negative.",Toast.LENGTH_SHORT).show();
@@ -80,16 +72,12 @@ public class CounterActivity extends AppCompatActivity{
 
 
     }
-
-
+    //set up button for saving a record
     public void saveButtonClicked(View view) {
         saveRecord();
     }
 
-    public void delButtonClicked(View view) {
-        delRecord();
-    }
-
+    // take data from text fields and send it to Utilities class
     private void saveRecord() {
         Counter counter;
 
@@ -100,10 +88,10 @@ public class CounterActivity extends AppCompatActivity{
 
         if(loadedCounter == null) {
             counter = new Counter(System.currentTimeMillis(), recordName.getText().toString()
-                    , recordComments.getText().toString(), String.valueOf(counterValue));
+                    , recordComments.getText().toString(), counterValue);
         } else {
             counter = new Counter(System.currentTimeMillis(), recordName.getText().toString()
-                    , recordComments.getText().toString(), String.valueOf(counterValue));
+                    , recordComments.getText().toString(), counterValue);
         }
 
         if (Utilities.saveRecord(this, counter)) {
@@ -114,32 +102,33 @@ public class CounterActivity extends AppCompatActivity{
         }
         finish();
     }
-
+    // looking for a record and delete it
     private void delRecord(){
-
-        AlertDialog.Builder warning = new AlertDialog.Builder(this)
-                .setTitle("Delete record")
-                .setMessage("Are you sure you want to delete" + recordName.getText().toString() + "?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int which) {
-                        if (loadedCounter != null && Utilities.delFile(getApplicationContext(), recordFileName)) {
+        if (loadedCounter == null){
+            finish();
+        } else {
+            AlertDialog.Builder warning = new AlertDialog.Builder(this)
+                    .setTitle("Delete record")
+                    .setMessage("Are you sure you want to delete" + recordName.getText().toString() + "?")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Utilities.delRecord(getApplicationContext()
+                                     , loadedCounter.getDateTime() + Utilities.FILE_EXTENSION);
                             Toast.makeText(getApplicationContext()
-                                    , loadedCounter.getName() + "was deleted", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(CounterActivity.this, "Can't delete the record " + loadedCounter.getName() + " "
-                                    , Toast.LENGTH_SHORT).show();
+                                    , recordName.getText().toString() + "was deleted",Toast.LENGTH_SHORT).show();
+                            finish();
                         }
-                        finish();
-                    }
-                })
-                .setNegativeButton("No", null)
-                .setCancelable(false);
+                    })
+                    .setNegativeButton("No", null)
+                    .setCancelable(false);
 
-        warning.show();
+            warning.show();
 
         }
     }
+
+}
 
 
 

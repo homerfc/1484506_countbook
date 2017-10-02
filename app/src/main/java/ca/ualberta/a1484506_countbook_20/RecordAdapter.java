@@ -17,8 +17,8 @@ import java.util.ArrayList;
 
 public class RecordAdapter extends ArrayAdapter<Counter> {
 
-    public RecordAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull ArrayList<Counter> counters) {
-        super(context, resource, counters);
+    public RecordAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull ArrayList<Counter> objects) {
+        super(context, resource, objects);
     }
 
     @Override
